@@ -30,7 +30,9 @@ public class WikiMapper extends Mapper<LongWritable, Text, Text, Text> {
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         String fileName = ((FileSplit) context.getInputSplit()).getPath().getName();
         for (String word : context.getConfiguration().getStrings("words")) {
-            context.write(new Text(word), new Text(fileName));
+            if (value.find(word) != -1) {
+                context.write(new Text(word), new Text(fileName));
+            }
         }
     }
 }
